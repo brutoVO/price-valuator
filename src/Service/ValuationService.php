@@ -6,7 +6,7 @@ use App\Domain\Pricing\PricingRule;
 use App\Dto\ValuationRequest;
 use App\Dto\ValuationResponse;
 
-class ValuationService
+readonly class ValuationService
 {
 	/**
 	 * @param iterable<PricingRule> $rules
