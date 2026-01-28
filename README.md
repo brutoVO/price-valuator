@@ -173,7 +173,7 @@ Follow these steps to get the project up and running in minutes:
 
 1. **Clone the repository:**
    ```bash
-   git clone <repo-url>
+   git clone https://github.com/brutoVO/price-valuator
    cd price-valuator
    ```
 
