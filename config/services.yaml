@@ -28,3 +28,4 @@ services:
         $rules:
           - '@App\Domain\Pricing\Rules\BrandRule'
           - '@App\Domain\Pricing\Rules\ConditionRule'
+          - '@App\Domain\Pricing\Rules\SeasonRule'
