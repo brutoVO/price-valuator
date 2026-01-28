@@ -61,3 +61,47 @@ Implementar un componente Vue.js que consuma este endpoint.
 Por favor, provee un repositorio Git (GitHub/GitLab/Bitbucket) con el código. No es necesario que sea un proyecto funcional completo (dockerizado), pero sí que la estructura de carpetas y los archivos de código sean coherentes y ejecutables (especialmente los tests).
 
 **Tiempo estimado**: 3-4 horas.
+
+---
+
+## 🚀 Quick Start & Demo
+
+Follow these steps to get the project up and running in minutes:
+
+1. **Clone the repository:**
+   ```bash
+   git clone <repo-url>
+   cd price-valuator
+   ```
+
+2. **Prepare Environment:**
+   Create a `.env.local` file to sync your local user ID with the Docker container (avoids permission issues):
+   ```bash
+   echo "UID=$(id -u)" > .env.local
+   echo "GID=$(id -g)" >> .env.local
+   ```
+
+3. **Initialize & Build:**
+   This command installs Symfony, Node dependencies, and compiles the frontend:
+   ```bash
+   make init
+   ```
+
+4. **Start Infrastructure:**
+   ```bash
+   make up
+   ```
+
+5. **Run All Tests (Backend & Frontend):**
+   ```bash
+   make test
+   ```
+
+6. **Try the Demo:**
+   Open [http://localhost:8080](http://localhost:8080) in your browser.
+   
+   **Test Scenario:**
+   - Brand: `Zara` (+10%)
+   - Condition: `New` (x1.5)
+   - Season: `Checked` (+10€)
+   - Expected Result: **26.50€** (Base 10€ * 1.10 * 1.5 + 10€)
