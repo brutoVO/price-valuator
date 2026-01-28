@@ -1,6 +1,6 @@
 .PHONY: up down shell init test test-back test-front
 
-include .env
+-include .env
 export
 
 up:
@@ -12,14 +12,14 @@ down:
 shell:
 	docker compose exec app bash
 
-# Instala Symfony Skeleton si el directorio está vacío (excepto docker/)
-init:
+ install:
 	docker compose build
 	docker compose up -d
-	docker compose exec app composer create-project symfony/skeleton:"6.4.*" tmp_sf
-	docker compose exec app cp -rT tmp_sf/ .
-	docker compose exec app rm -rf tmp_sf
-	@echo "Symfony initialized! Run 'make up' to ensure services are running."
+	docker compose exec app composer install
+	docker compose exec app npm install --legacy-peer-deps
+	docker compose exec app npm run build
+	docker compose exec app php bin/console cache:clear
+	docker compose exec app php bin/console cache:clear --env=test
 
 assets:
 	docker compose exec app npm run dev

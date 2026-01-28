@@ -187,7 +187,7 @@ Follow these steps to get the project up and running in minutes:
 3. **Initialize & Build:**
    This command installs Symfony, Node dependencies, and compiles the frontend:
    ```bash
-   make init
+   make install
    ```
 
 4. **Start Infrastructure:**
