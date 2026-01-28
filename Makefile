@@ -1,6 +1,6 @@
-.PHONY: up down shell init test test-back test-front
+.PHONY: up down shell install test test-back test-front assets watch build
 
--include .env
+-include .env.local
 export
 
 up:
@@ -12,7 +12,7 @@ down:
 shell:
 	docker compose exec app bash
 
- install:
+install:
 	docker compose build
 	docker compose up -d
 	docker compose exec app composer install
@@ -20,6 +20,7 @@ shell:
 	docker compose exec app npm run build
 	docker compose exec app php bin/console cache:clear
 	docker compose exec app php bin/console cache:clear --env=test
+	@echo "Project installed! Open http://localhost:8080"
 
 assets:
 	docker compose exec app npm run dev

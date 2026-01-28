@@ -185,7 +185,7 @@ Follow these steps to get the project up and running in minutes:
    ```
 
 3. **Initialize & Build:**
-   This command installs Symfony, Node dependencies, and compiles the frontend:
+   This command installs all dependencies (PHP & Node) and compiles the assets:
    ```bash
    make install
    ```
@@ -201,10 +201,21 @@ Follow these steps to get the project up and running in minutes:
    ```
 
 6. **Try the Demo:**
+   
+   **Option A: Browser**
    Open [http://localhost:8080](http://localhost:8080) in your browser.
    
-   **Test Scenario:**
-   - Brand: `Zara` (+10%)
-   - Condition: `New` (x1.5)
-   - Season: `Checked` (+10€)
-   - Expected Result: **26.50€** (Base 10€ * 1.10 * 1.5 + 10€)
+   **Option B: CURL (API)**
+   ```bash
+   curl -X POST http://localhost:8080/api/v1/valuation/estimate \
+     -H "Content-Type: application/json" \
+     -d '{
+       "brand": "Zara",
+       "condition": "new",
+       "is_high_season": true
+     }'
+   ```
+
+   **Expected Result:**
+   - **Price:** `26.5`
+   - **Logic:** Base 10€ * 1.10 (Zara) * 1.5 (New) + 10€ (Season)
