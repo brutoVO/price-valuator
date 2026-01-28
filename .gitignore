@@ -1,4 +1,3 @@
-
 ###> symfony/framework-bundle ###
 /.env.local
 /.env.local.php
@@ -8,3 +7,31 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+###> IDE & Editors (Keep it clean) ###
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+###> OS ###
+.DS_Store
+Thumbs.db
+
+###> Node / Frontend (Vue.js Requirements) ###
+/node_modules/
+/public/build/
+/public/hot
+npm-debug.log
+yarn-error.log
+
+###> PHPUnit & Quality Tools ###
+/phpunit.xml
+.phpunit.result.cache
+.phpunit.cache/
+/coverage/
+/reports/
+
+###> Docker ###
+docker-compose.override.yml
