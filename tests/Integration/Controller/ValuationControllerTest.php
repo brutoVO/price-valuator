@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class ValuationControllerTest extends WebTestCase
 {
-    public function testItEstimatesValueIdeally(): void
+	public function testItEstimatesValueIdeally(): void
     {
         $client = static::createClient();
 
@@ -16,11 +16,11 @@ class ValuationControllerTest extends WebTestCase
             [],
             [],
             ['CONTENT_TYPE' => 'application/json'],
-			json_encode([
-				'brand' => 'Zara',
-				'condition' => 'new',
+            json_encode([
+                'brand' => 'Zara',
+                'condition' => 'new',
                 'is_high_season' => false
-			], JSON_THROW_ON_ERROR)
+            ], JSON_THROW_ON_ERROR)
         );
 
         $this->assertResponseIsSuccessful();
@@ -30,6 +30,30 @@ class ValuationControllerTest extends WebTestCase
 
         // Base 10.0 * 1.10 (Zara) * 1.5 (New) = 16.5
         $this->assertEquals(16.5, $data['estimated_price']);
+    }
+
+    public function testItAppliesHighSeasonBonus(): void
+    {
+        $client = static::createClient();
+
+        $client->request(
+            'POST',
+            '/api/v1/valuation/estimate',
+            [],
+            [],
+            ['CONTENT_TYPE' => 'application/json'],
+            json_encode([
+                'brand' => 'Zara',
+                'condition' => 'new',
+                'is_high_season' => true
+            ], JSON_THROW_ON_ERROR)
+        );
+
+        $this->assertResponseIsSuccessful();
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        // (Base 10.0 * 1.10 * 1.5) + 10.0 (Season Bonus) = 26.5
+        $this->assertEquals(26.5, $data['estimated_price']);
     }
 
     public function testItReturnsBadRequestForInvalidInput(): void
@@ -44,7 +68,6 @@ class ValuationControllerTest extends WebTestCase
             ['CONTENT_TYPE' => 'application/json'],
             json_encode([
                 'brand' => '', // Invalid
-                'category' => 'T-Shirt',
                 'condition' => 'broken' // Invalid
             ], JSON_THROW_ON_ERROR)
         );

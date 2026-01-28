@@ -33,7 +33,7 @@ build:
 test: test-back test-front
 
 test-back:
-	docker compose exec app bin/phpunit
+	docker compose exec app env APP_ENV=test bin/phpunit
 
 test-front:
 	docker compose exec app npm test
