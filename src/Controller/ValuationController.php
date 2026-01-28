@@ -7,25 +7,43 @@ use App\Service\ValuationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ValuationController extends AbstractController
 {
 	public function __construct(
-		private readonly ValuationService $valuationService
+		private readonly ValuationService $valuationService,
+		private readonly ValidatorInterface $validator
 	) {
 	}
 
 	#[Route('/api/v1/valuation/estimate', name: 'api_valuation_estimate', methods: ['POST'])]
 	public function estimate(Request $request): JsonResponse
 	{
-		$data = json_decode($request->getContent(), true);
+		$data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+
+		if (!$data) {
+			return $this->json(['error' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
+		}
 
 		$valuationRequest = new ValuationRequest(
 			$data['brand'] ?? '',
-			$data['category'] ?? '',
-			$data['condition'] ?? ''
+			$data['condition'] ?? '',
+			$data['is_high_season'] ?? false
 		);
+
+		$errors = $this->validator->validate($valuationRequest);
+
+		if (count($errors) > 0) {
+			$errorMessages = [];
+			foreach ($errors as $error) {
+				$errorMessages[] = $error->getPropertyPath() . ': ' . $error->getMessage();
+			}
+
+			return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
+		}
 
 		$result = $this->valuationService->estimate($valuationRequest);
 

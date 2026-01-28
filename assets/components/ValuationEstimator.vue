@@ -5,12 +5,7 @@
         <form @submit.prevent="estimatePrice">
             <div class="form-group">
                 <label for="brand">Brand</label>
-                <input type="text" v-model="form.brand" id="brand" placeholder="e.g. Zara" required>
-            </div>
-
-            <div class="form-group">
-                <label for="category">Category</label>
-                <input type="text" v-model="form.category" id="category" placeholder="e.g. T-Shirt" required>
+                <input type="text" v-model="form.brand" id="brand" placeholder="Zara" required>
             </div>
 
             <div class="form-group">
@@ -20,6 +15,11 @@
                     <option value="good">Good condition</option>
                     <option value="fair">Fair / Used</option>
                 </select>
+            </div>
+
+            <div class="form-group checkbox-group">
+                <input type="checkbox" v-model="form.is_high_season" id="is_high_season">
+                <label for="is_high_season">Is High Season?</label>
             </div>
 
             <button type="submit" :disabled="loading">
@@ -43,8 +43,8 @@ export default {
         return {
             form: {
                 brand: '',
-                category: '',
                 condition: 'good',
+                is_high_season: false,
             },
             loading: false,
             error: null,
@@ -77,8 +77,8 @@ export default {
             } finally {
                 this.loading = false;
             }
-        },
-    },
+        }
+    }
 };
 </script>
 
@@ -90,22 +90,32 @@ export default {
     border: 1px solid #ccc;
     border-radius: 8px;
 }
-
 .form-group {
     margin-bottom: 15px;
 }
 
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group input {
+    width: auto;
+}
+
+.checkbox-group label {
+    margin-bottom: 0;
+}
 label {
     display: block;
     margin-bottom: 5px;
 }
-
 input, select {
     width: 100%;
     padding: 8px;
     box-sizing: border-box;
 }
-
 button {
     width: 100%;
     padding: 10px;
@@ -115,16 +125,13 @@ button {
     border-radius: 4px;
     cursor: pointer;
 }
-
 button:disabled {
     background-color: #ccc;
 }
-
 .error {
     color: red;
     margin-top: 10px;
 }
-
 .result {
     margin-top: 20px;
     padding: 10px;
