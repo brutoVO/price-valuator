@@ -1,0 +1,22 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: percentil-app
+    user: "${UID}:${GID}"
+    environment:
+      - HOME=/tmp
+    volumes:
+      - ./:/var/www/html
+
+  nginx:
+    image: nginx:alpine
+    container_name: percentil-nginx
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    depends_on:
+      - app
