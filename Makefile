@@ -21,6 +21,15 @@ init:
 	docker compose exec app rm -rf tmp_sf
 	@echo "Symfony initialized! Run 'make up' to ensure services are running."
 
+assets:
+	docker compose exec app npm run dev
+
+watch:
+	docker compose exec app npm run watch
+
+build:
+	docker compose exec app npm run build
+
 test: test-back test-front
 
 test-back:
