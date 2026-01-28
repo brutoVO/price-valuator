@@ -5,6 +5,7 @@ services:
       dockerfile: docker/php/Dockerfile
     container_name: percentil-app
     user: "${UID}:${GID}"
+    env_file: .env
     environment:
       - HOME=/tmp
     volumes:

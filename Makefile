@@ -1,5 +1,8 @@
 .PHONY: up down shell init test test-back test-front
 
+include .env
+export
+
 up:
 	docker compose up -d
 
