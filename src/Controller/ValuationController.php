@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Dto\ValuationRequest;
 use App\Service\ValuationService;
+use JsonException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,33 +23,34 @@ class ValuationController extends AbstractController
 	#[Route('/api/v1/valuation/estimate', name: 'api_valuation_estimate', methods: ['POST'])]
 	public function estimate(Request $request): JsonResponse
 	{
-		$data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+		try {
+			$data = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
 
-		if (!$data) {
-			return $this->json(['error' => 'Invalid JSON'], Response::HTTP_BAD_REQUEST);
-		}
+			$valuationRequest = new ValuationRequest(
+				$data['brand'] ?? '',
+				$data['condition'] ?? '',
+				$data['is_high_season'] ?? false
+			);
 
-		$valuationRequest = new ValuationRequest(
-			$data['brand'] ?? '',
-			$data['condition'] ?? '',
-			$data['is_high_season'] ?? false
-		);
+			$errors = $this->validator->validate($valuationRequest);
 
-		$errors = $this->validator->validate($valuationRequest);
+			if (count($errors) > 0) {
+				$errorMessages = [];
+				foreach ($errors as $error) {
+					$errorMessages[] = $error->getPropertyPath() . ': ' . $error->getMessage();
+				}
 
-		if (count($errors) > 0) {
-			$errorMessages = [];
-			foreach ($errors as $error) {
-				$errorMessages[] = $error->getPropertyPath() . ': ' . $error->getMessage();
+				return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
 			}
 
-			return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
+			$result = $this->valuationService->estimate($valuationRequest);
+
+			return $this->json([
+				'estimated_price' => $result->getEstimatedPrice(),
+			]);
+		} catch (JsonException) {
+			return $this->json(['error' => 'Invalid JSON payload'], Response::HTTP_BAD_REQUEST);
 		}
-
-		$result = $this->valuationService->estimate($valuationRequest);
-
-		return $this->json([
-			'estimated_price' => $result->getEstimatedPrice(),
-		]);
 	}
+
 }

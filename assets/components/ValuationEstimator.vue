@@ -5,7 +5,7 @@
         <form @submit.prevent="estimatePrice">
             <div class="form-group">
                 <label for="brand">Brand</label>
-                <input type="text" v-model="form.brand" id="brand" placeholder="Zara" required>
+                <input type="text" v-model="form.brand" id="brand" placeholder="Zara">
             </div>
 
             <div class="form-group">
